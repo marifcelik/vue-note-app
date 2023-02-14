@@ -1,9 +1,20 @@
 export default class NoteC {
-  constructor(id, body, date, bg, color) {
+  /** 
+   * @param {Number} id 
+   * @param {String} body 
+   * @param {Date} date 
+   * @param {String} bg 
+   */
+  constructor(id, body, date, bg) {
     this.id = id;
     this.body = body;
-    this.date = date.toLocaleDateString('tr-TR') + ' - ' + date.toLocaleTimeString('tr-TR', { timeStyle: 'short' });
-    this.bg = `bg-${bg}-500`;
-    this.color = color;
+    this.setDate(date)
+    this.bg = bg;
+  }
+  /**
+   * @param {Date} d - method for make date propertie updatable
+   */
+  setDate(d) {
+    this.date = d.toLocaleDateString('tr-TR') + ' - ' + d.toLocaleTimeString('tr-TR', { timeStyle: 'short' });
   }
 }
