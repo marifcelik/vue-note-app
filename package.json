@@ -9,6 +9,7 @@
     "preview": "npm run build && echo && vite preview"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^1.0.0-beta.6",
     "vue": "^3.2.45"
   },
   "devDependencies": {
