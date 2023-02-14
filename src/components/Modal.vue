@@ -1,6 +1,9 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
 
+const props = defineProps({ show: Boolean, edit: Object })
+const emit = defineEmits(['addNote', 'editNote', 'closeModal'])
+
 // didn't work
 // const colors = ['red', 'orange', 'yellow', 'green', 'teal', 'cyan', 'violet', 'blue'].map(v => `bg-${v}-500`)
 const colors = ['bg-red-500', 'bg-orange-400', 'bg-amber-300', 'bg-emerald-300', 'bg-teal-400', 'bg-cyan-400', 'bg-violet-500']
@@ -11,36 +14,38 @@ const select = ref(0);
 
 const selectedColor = computed(() => colors[select.value])
 
-const emit = defineEmits(['addNote', 'closeModal'])
-defineProps({ show: { type: Boolean, required: true }, Note: {} })
+watchEffect(() => {
+  textRef.value && setTimeout(() => textRef.value.focus(), 200)
+  if (props.edit) {
+    text.value = props.edit.body
+    select.value = colors.findIndex((v) => v === props?.edit.bg)
+  } else {
+    text.value = '';
+    select.value = 0;
+  }
+})
 
-watchEffect(() => textRef.value && setTimeout(() => textRef.value.focus(), 200))
-
-function emitAddNote() {
+function emitSave() {
   const data = { text: text.value, bg: selectedColor.value }
-  emit('addNote', data);
-  text.value = '';
-}
-
-function emitCloseModal() {
-  emit('closeModal');
+  const emitType = props.edit ? 'editNote' : 'addNote';
+  emit(emitType, data);
   text.value = '';
 }
 </script>
 
 <template>
   <Transition name="modal">
-    <div v-if="show" id="overlay" @click="emitCloseModal" @keyup.esc="emitCloseModal" class="modal-mask absolute top-0 left-0 flex w-full h-full bg-neutral-900/70 z-10">
+    <div v-if="show" id="overlay" @click="emit('closeModal')" @keyup.esc="emit('closeModal')" class="modal-mask absolute top-0 left-0 flex w-full h-full bg-neutral-900/70 z-10">
       <div @click.stop="" class="modal-container flex flex-col relative m-auto w-[48rem] h-96 border-none rounded-xl p-7" :class="selectedColor">
         <div class="flex items-center justify-between w-1/2 m-auto">
           <label v-for="color, index in colors" :key="index" class="w-6 h-6 rounded-full">
             <input type="radio" :value="index" v-model="select" :class="color" @mousedown.prevent="" class="appearance-none transition-all w-full h-full rounded-full cursor-pointer border checked:border-4 checked:border-white">
           </label>
         </div>
-        <textarea ref="textRef" v-model="text" @keyup.ctrl.enter="emitAddNote" class="h-full p-4 mt-3 border-2 rounded-xl resize-none outline-none" autofocus></textarea>
+        <textarea ref="textRef" v-model="text" @keyup.ctrl.enter="emitSave" class="h-full p-4 mt-3 border-2 rounded-xl resize-none outline-none" autofocus></textarea>
         <div class="w-1/2 mx-auto mt-3 flex justify-between">
-          <button @click="emitAddNote" class="btn bg-blue-500">save</button>
-          <button @click="emitCloseModal" class="btn bg-red-500">close</button>
+          <button @click="emitSave" class="btn bg-blue-500">save</button>
+          <button @click="emit('closeModal')" class="btn bg-red-500">close</button>
         </div>
       </div>
     </div>
