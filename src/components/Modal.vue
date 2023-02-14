@@ -1,7 +1,8 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
+import NoteC from '../class/NoteC';
 
-const props = defineProps({ show: Boolean, edit: Object })
+const props = defineProps({ show: Boolean, edit: { type: Object, validator: value => value instanceof NoteC } })
 const emit = defineEmits(['addNote', 'editNote', 'closeModal'])
 
 // didn't work
@@ -17,7 +18,7 @@ const selectedColor = computed(() => colors[select.value])
 watchEffect(() => {
   textRef.value && setTimeout(() => textRef.value.focus(), 200)
   if (props.edit) {
-    text.value = props.edit.body
+    text.value = props.edit.text
     select.value = colors.findIndex((v) => v === props?.edit.bg)
   } else {
     text.value = '';

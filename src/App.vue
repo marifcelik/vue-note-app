@@ -11,8 +11,12 @@ const notes = ref([]);
 const edit = ref(null);
 
 onMounted(() => {
-  const data = JSON.parse(localStorage.getItem('notes') ?? JSON.stringify(notes.value));
-  if (data.length > 0) {
+  let data = JSON.parse(localStorage.getItem('notes'));
+  if (data?.length > 0) {
+    data = data.map(value => {
+      const { id, text, date, bg } = value
+      return new NoteC(id, text, date, bg);
+    });
     id.value = data[data.length - 1].id + 1;
     notes.value = data
   }
@@ -32,7 +36,6 @@ function emitEdit(id) {
 
 function editNote({ text, bg }) {
   const data = new NoteC(edit.value.id, text, new Date(), bg);
-  console.log(data)
   notes.value[notes.value.findIndex(v => v == edit.value)] = data
   localStorage.setItem('notes', JSON.stringify(notes.value));
   showModal.value = false;
