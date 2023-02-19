@@ -7,7 +7,7 @@ export default class NoteC {
    */
   constructor(id, text, date, bg) {
     this.id = id;
-    this.text = text.trim();
+    this.text = text;
     this.date = date;
     this.bg = bg;
   }

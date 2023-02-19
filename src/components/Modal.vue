@@ -43,7 +43,7 @@ function emitSave() {
             <input type="radio" :value="index" v-model="select" :class="color" @mousedown.prevent="" class="appearance-none transition-all w-full h-full rounded-full cursor-pointer border checked:border-4 checked:border-white">
           </label>
         </div>
-        <textarea ref="textRef" v-model="text" @keyup.ctrl.enter="emitSave" class="h-full p-4 mt-3 border-2 rounded-xl resize-none outline-none" autofocus></textarea>
+        <textarea ref="textRef" v-model.trim="text" @keyup.ctrl.enter="emitSave" class="h-full p-4 mt-3 border-2 rounded-xl resize-none outline-none" autofocus></textarea>
         <div class="w-1/2 mx-auto mt-3 flex justify-between">
           <button @click="emitSave" class="btn bg-blue-500">save</button>
           <button @click="emit('closeModal')" class="btn bg-red-500">close</button>
