@@ -22,7 +22,7 @@ const d = computed(() => new Date(props.date))
   </div>
 </template>
 
-<style scoped>
+<style lang="postcss" scoped>
 .icon {
   @apply w-7 h-7 mr-1 cursor-pointer rounded-full hover:bg-slate-200/50;
 }
